@@ -1,0 +1,25 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum STATE {
+  START
+  INITIAL
+}
+
+model Problem {
+  id          Int    @id @default(autoincrement())
+  user        String
+  name        String
+  description String
+}
+
+model whatsAppSession {
+  id    String @id
+  state STATE
+}

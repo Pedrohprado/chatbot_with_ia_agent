@@ -1,7 +1,9 @@
 import qrcode from 'qrcode-terminal';
 import { Client, LocalAuth } from 'whatsapp-web.js';
+import fs from 'fs';
 import { prisma } from '../../config/prisma.js';
 import { executeAgentIa } from '../../agents/execute-agent.js';
+import { transcribeAudio } from '../../agents/utils/transcribe-audio.js';
 
 const client = new Client({
   authStrategy: new LocalAuth(),
@@ -62,6 +64,24 @@ client.on('message', async (message) => {
     }
 
     if (session.state === 'INITIAL') {
+      if (message.hasMedia) {
+        const media = await message.downloadMedia();
+
+        const filePath = `./temp/${Date.now()}.ogg`;
+        fs.writeFileSync(filePath, Buffer.from(media.data, 'base64'));
+
+        const text = await transcribeAudio(filePath);
+
+        if (!text) {
+          return message.reply('Não consegui entender o áudio 😕');
+        }
+
+        console.log('📝 Texto reconhecido:', text);
+
+        const result = await executeAgentIa(text);
+
+        return message.reply(result);
+      }
       const messageForIa = message.body;
       const statusReturnIa = await executeAgentIa(messageForIa);
 
@@ -76,14 +96,6 @@ client.on('message', async (message) => {
         });
         return message.reply('Processamos o seu problema!');
       } else {
-        await prisma.whatsAppSession.update({
-          where: {
-            id: session.id,
-          },
-          data: {
-            state: 'START',
-          },
-        });
         return message.reply('Tivemos um problema ao processar!');
       }
     }

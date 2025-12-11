@@ -23,3 +23,10 @@ model whatsAppSession {
   id    String @id
   state STATE
 }
+
+model Employees {
+  id         Int    @id @default(autoincrement())
+  name       String
+  cardNumber String
+  unit       String
+}

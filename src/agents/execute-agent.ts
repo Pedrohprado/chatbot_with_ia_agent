@@ -7,9 +7,29 @@ export async function executeAgentIa(message: string) {
       messages: [new HumanMessage(message)],
     });
     console.log(response);
-    return true;
+
+    const lastMessage = response.messages.at(-1)?.content;
+
+    let text: string;
+
+    if (typeof lastMessage === 'string') {
+      text = lastMessage;
+    } else if (Array.isArray(lastMessage)) {
+      text = lastMessage
+        .map((block) => {
+          if (typeof block === 'string') return block;
+          if (block.text) return block.text;
+          return '';
+        })
+        .join(' ')
+        .trim();
+    } else {
+      text = 'Tudo certo!';
+    }
+
+    return text;
   } catch (error) {
     console.error(error);
-    return false;
+    return 'Tivemos um problema ao processar sua solicitação.';
   }
 }

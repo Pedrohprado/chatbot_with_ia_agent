@@ -1,5 +1,5 @@
 import { tool } from 'langchain';
-import { PrismaEmployeeRepository } from '../services/user.js';
+import { PrismaEmployeeRepository } from '../../services/user.js';
 
 export const employeeTool = tool(
   async ({ cardNumber, unit }) => {

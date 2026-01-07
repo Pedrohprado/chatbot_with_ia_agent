@@ -4,15 +4,14 @@ import {
   START,
   StateGraph,
 } from '@langchain/langgraph';
-import { llmNode } from './nodes/node-llm.js';
-import { ToolNode } from '@langchain/langgraph/prebuilt';
-import { employeeTool } from '../../tools/employee-tools.js';
-const toolNode = new ToolNode([employeeTool]);
+import { finalNode } from './nodes/final-node.js';
+import { llmNode } from './nodes/llm-node.js';
+import { toolNode } from './nodes/tool-node.js';
 
 export const graph = new StateGraph(MessagesAnnotation)
   .addNode('llm', llmNode)
   .addNode('tools', toolNode)
-  .addNode('final', llmNode)
+  .addNode('final', finalNode)
   .addEdge(START, 'llm')
   .addEdge('llm', 'tools')
   .addEdge('tools', 'final')

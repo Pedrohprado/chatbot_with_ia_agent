@@ -5,6 +5,7 @@
   "main": "server.cjs",
   "scripts": {
     "dev": "tsx --watch ./src/server.ts",
+    "agent": "tsx src/utils/agent-cli.ts",
     "start": "node --watch ./dist/server.cjs",
     "build": "tsup src"
   },

@@ -1,11 +1,13 @@
 import qrcode from 'qrcode-terminal';
-import { Client, LocalAuth } from 'whatsapp-web.js';
+import pkg from 'whatsapp-web.js';
 import fs from 'fs';
 import { prisma } from '../../config/prisma.js';
 import { executeAgentIa } from '../../agents/execute-agent.js';
 import { transcribeAudio } from '../../agents/utils/transcribe-audio.js';
 
-const client = new Client({
+const { Client, LocalAuth } = pkg;
+
+export const client = new Client({
   authStrategy: new LocalAuth(),
   puppeteer: {
     headless: true,
@@ -24,6 +26,7 @@ client.on('ready', () => {
 client.on('message', async (message) => {
   const phoneNumber = message.from;
   const testNumber = '5514991787247@c.us';
+  console.log(phoneNumber);
   if (phoneNumber === testNumber) {
     let session = await prisma.whatsAppSession.findUnique({
       where: {
@@ -59,7 +62,7 @@ client.on('message', async (message) => {
             state: 'INITIAL',
           },
         });
-        return message.reply('Faça uma pergunta para a IA');
+        return message.reply('Informe seu problema para a IA');
       }
     }
 
@@ -82,6 +85,7 @@ client.on('message', async (message) => {
 
         return message.reply(result);
       }
+
       const messageForIa = message.body;
       const statusReturnIa = await executeAgentIa(messageForIa);
 
@@ -104,5 +108,3 @@ client.on('message', async (message) => {
     );
   }
 });
-
-export default client;

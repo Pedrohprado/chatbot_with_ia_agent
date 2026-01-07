@@ -1,5 +1,5 @@
 import { tool } from '@langchain/core/tools';
-import { PrismaProblemRepository } from '../services/problem.js';
+import { PrismaProblemRepository } from '../../services/problem.js';
 
 export const issueTool = tool(
   async ({ name, user, description }) => {

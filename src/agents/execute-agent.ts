@@ -6,10 +6,9 @@ export async function executeAgentIa(message: string) {
     const response = await graph.invoke({
       messages: [new HumanMessage(message)],
     });
+
     console.log(response);
-
     const lastMessage = response.messages.at(-1)?.content;
-
     let text: string;
 
     if (typeof lastMessage === 'string') {

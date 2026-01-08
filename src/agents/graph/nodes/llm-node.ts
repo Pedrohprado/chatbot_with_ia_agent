@@ -1,4 +1,5 @@
 import { model } from '../../model/groq-model.js';
+import { MessagesAnnotation } from '@langchain/langgraph';
 
 const systemPrompt = `
 Você é um assistente que encontra colaboradores.
@@ -20,7 +21,7 @@ Se faltar alguma informação, peça ao usuário.
 Nunca invente dados.
 `;
 
-export const llmNode = async (state: any) => {
+export const llmNode = async (state: typeof MessagesAnnotation.State) => {
   const response = await model.invoke([
     {
       role: 'system',

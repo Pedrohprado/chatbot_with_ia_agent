@@ -1,6 +1,5 @@
 export const finalNode = async (state: any) => {
   const last = state.messages.at(-1);
-
   // resposta da tool
   if (last?.tool_call_id && last?.content) {
     const result = JSON.parse(last.content);

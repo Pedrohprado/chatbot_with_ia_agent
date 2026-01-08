@@ -3,10 +3,15 @@ import { PrismaEmployeeRepository } from '../../services/user.js';
 
 export const employeeTool = tool(
   async ({ cardNumber, unit }) => {
-    const repositoryEmployee = new PrismaEmployeeRepository();
-    const findEmployee = await repositoryEmployee.find({ cardNumber, unit });
+    try {
+      const repositoryEmployee = new PrismaEmployeeRepository();
+      const findEmployee = await repositoryEmployee.find({ cardNumber, unit });
 
-    return findEmployee;
+      return findEmployee;
+    } catch (error) {
+      console.log(error);
+      throw new Error('erro interno no servidor');
+    }
   },
   {
     name: 'checkEmployee',
